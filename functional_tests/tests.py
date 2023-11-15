@@ -87,10 +87,10 @@ class NewVisitorTest(LiveServerTestCase):
        self.browser = webdriver.Firefox()
 
        # Francis visits a home page. There are no Edith's list
-       self.browser.get(self.live_server.url)
+       self.browser.get(self.live_server_url)
        page_text = self.browser.find_element(By.TAG_NAME, 'body').text
        self.assertNotIn('Buy peacock feathers', page_text)
-       self.assertNotIn("Make a peacock's feathers box")
+       self.assertNotIn("Make a peacock's feathers box", page_text)
 
        # Francis starts a new list entering a new element
        inputbox = self.browser.find_element(By.ID, 'id_new_item')

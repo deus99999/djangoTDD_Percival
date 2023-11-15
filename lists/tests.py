@@ -6,6 +6,17 @@ from django.template.loader import render_to_string
 from lists.models import Item
 
 
+class ListViewTest(TestCase):
+   '''test fot list viewing'''
+   def test_displays_all_items(self):
+      Item.objects.create(text='itemey 1')
+      Item.objects.create(text='itemey 2')
+
+      response = self.client.get('/lists/list/')
+       
+      self.assertContains(response, 'itemey 1')
+      self.assertContains(response, 'itemey 2')
+
 # Create your tests here.
 class HomePageTest(TestCase):
     '''home page test'''
@@ -46,22 +57,12 @@ class HomePageTest(TestCase):
        '''test: redirects after post request'''
        response = self.client.post('/', data={'item_text': 'A new list item'})
        self.assertEqual(response.status_code, 302)
-       self.assertEqual(response['location'], '/')
+       self.assertEqual(response['location'], '/lists/list')
        
     def test_only_saves_items_when_necessary(self):
        '''test: saves elements when necessary'''
        self.client.get('/')
        self.assertEqual(Item.objects.count(), 0)
-
-    def test_displays_all_list_items(self):
-       '''test: all items are displayed'''
-       Item.objects.create(text='itemey 1')
-       Item.objects.create(text='itemey 2')
-
-       response = self.client.get('/')
-       
-       self.assertIn('itemey 1', response.content.decode())
-       self.assertIn('itemey 2', response.content.decode())
 
 class ItemModelTest(TestCase):
     '''module element of list test'''
