@@ -26,4 +26,5 @@ def add_item(request, list_id):
     '''add element'''
     list_ = List.objects.get(id=list_id)
     Item.objects.create(text=request.POST['item_text'], list=list_)
-    return redirect(f'/lists/{list_.id}/')
+   # return redirect(f'/lists/{list_.id}/')
+    return redirect('view_list', list_id=list_.id)
