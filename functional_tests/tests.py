@@ -8,6 +8,7 @@ from selenium.common.exceptions import WebDriverException
 
 import time
 import unittest
+import os
 
 MAX_WAIT = 10
 
@@ -19,7 +20,11 @@ class NewVisitorTest(StaticLiveServerTestCase):
     def setUp(self):
         """setup"""
         self.browser = webdriver.Firefox()
-        
+        staging_server = os.environ.get('STAGING_SERVER')
+        if staging_server:
+           self.live_server_url = 'http://' + staging_server
+
+
     def tearDown(self):
         """demontage"""
         self.browser.refresh()
@@ -100,7 +105,7 @@ class NewVisitorTest(StaticLiveServerTestCase):
        inputbox.send_keys('Buy milk')
        inputbox.send_keys(Keys.ENTER)
        self.wait_for_row_in_list_table('1: Buy milk')
-
+       
        # Francis gets a unique URL adress
        francis_list_url = self.browser.current_url
        self.assertRegex(francis_list_url, '/lists/.+')
@@ -109,12 +114,13 @@ class NewVisitorTest(StaticLiveServerTestCase):
        # Check again: There no Edith's list
        page_text = self.browser.find_element(By.TAG_NAME, 'body').text
        self.assertNotIn('Buy peacock feathers', page_text)
+       
        self.assertIn('Buy milk', page_text)
        
        # With satisfy they both went to sleep
 
 
-       self.fail('To end the test')
+      # self.fail('To end the test')
        # assert 'To-Do' in browser.title, "Browser title was " + browser.title
 
     def test_layout_and_styling(self):
